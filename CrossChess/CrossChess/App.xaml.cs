@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CrossChess.Views;
+using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -9,8 +10,7 @@ namespace CrossChess
         public App()
         {
             InitializeComponent();
-
-            MainPage = new MainPage();
+            MainPage = new SplashPage();
         }
 
         protected override void OnStart()

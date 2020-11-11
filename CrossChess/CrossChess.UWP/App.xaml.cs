@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
@@ -56,8 +57,11 @@ namespace CrossChess.UWP
                 rootFrame = new Frame();
 
                 rootFrame.NavigationFailed += OnNavigationFailed;
-
-                Xamarin.Forms.Forms.Init(e);
+                var parm = new List<Assembly>()
+                {
+                    typeof(CrossChess.App).Assembly
+                };
+                Xamarin.Forms.Forms.Init(e, parm);
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {

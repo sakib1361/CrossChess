@@ -1,4 +1,5 @@
 ﻿using CrossChessEngine.Engine.AI;
+using CrossChessEngine.Engine.App;
 using CrossChessEngine.Model.PieceModel;
 using System;
 using System.Collections.Generic;
@@ -73,7 +74,7 @@ namespace CrossChessEngine.Model.Data
         /// <summary>
         ///   Raised when the board position changes.
         /// </summary>
-        public static event GameEvent BoardPositionChanged;
+        //public static event GameEvent BoardPositionChanged;
 
         /// <summary>
         ///   Raised when the game is paused.
@@ -466,6 +467,12 @@ namespace CrossChessEngine.Model.Data
         /// </summary>
         public static void New()
         {
+            New(string.Empty);
+        }
+
+        public static void New(IBoardListener boardListener)
+        {
+            _listener = boardListener;
             New(string.Empty);
         }
 
@@ -1074,16 +1081,17 @@ namespace CrossChessEngine.Model.Data
             {
                 AddSaveGameNode(xmldoc, xmlnodeGame, MoveRedoList[intIndex]);
             }
-
-            xmldoc.Save(fileName);
+            
+            //xmldoc.Save(fileName);
         }
 
+        static IBoardListener _listener;
         /// <summary>
         ///   The send board position change event.
         /// </summary>
         private static void SendBoardPositionChangeEvent()
         {
-            BoardPositionChanged();
+            _listener.BoardPositionChanged();
         }
 
         /// <summary>
