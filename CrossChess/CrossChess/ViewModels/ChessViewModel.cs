@@ -16,7 +16,7 @@ namespace CrossChess.ViewModels
     {
         private SquareData currentSquare;
         private Moves allMoves;
-        public int Position { get; set; }
+        public double Position { get; set; }
         public ObservableCollection<SquareData> SquareDatas { get; }
         public ChessViewModel()
         {
@@ -32,7 +32,11 @@ namespace CrossChess.ViewModels
 
         public void BoardPositionChanged()
         {
-            if (SquareDatas.Count == 0) CreateBoard();
+            if (SquareDatas.Count == 0)
+            {
+                Position = 0.5;
+                CreateBoard();
+            }
             else
             {
                 Move LastMove = null;
@@ -43,9 +47,13 @@ namespace CrossChess.ViewModels
                 foreach (var square in SquareDatas)
                 {
                     square.UpdatePiece(LastMove);
-                   
                 }
+
+                var total = Game.PlayerWhite.PositionPoints + Game.PlayerBlack.PositionPoints;
+                Position = Game.PlayerWhite.PositionPoints / (total * 1.0);
+               
             }
+
         }
 
         private void CreateBoard()
@@ -62,6 +70,12 @@ namespace CrossChess.ViewModels
         }
 
         public ICommand PieceCommand => new RelayCommand<SquareData>(PieceAction);
+        public ICommand UndoCommand => new RelayCommand(UndoAction);
+
+        private void UndoAction()
+        {
+            Game.UndoMove();
+        }
 
         private void PieceAction(SquareData obj)
         {

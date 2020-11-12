@@ -5,6 +5,7 @@
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
+             xmlns:tm="clr-namespace:CrossChess.Templates"
              xmlns:vm="clr-namespace:CrossChess.ViewModels"
              d:BindingContext="{x:Static vm:ChessViewModel}"
              x:DataType="vm:ChessViewModel"
@@ -14,40 +15,45 @@
     <ContentPage.Resources>
         <cv:PieceConverter x:Key="PieceConverter" />
     </ContentPage.Resources>
-    <Grid x:Name="MGrid"
-          HorizontalOptions="Center">
-        <Image Source="{services:ImageResource Source=wood_black.jpg}" />
-        <Grid BindableLayout.ItemsSource="{Binding SquareDatas}"
-              ColumnSpacing="0"
-              RowSpacing="0">
-            <BindableLayout.ItemTemplate>
-                <DataTemplate x:DataType="models:SquareData">
-                    <Grid Grid.Column="{Binding Column}"
-                          Grid.Row="{Binding Row}"
-                          HorizontalOptions="Center"
-                          WidthRequest="100"
-                          HeightRequest="100">
-                        <Grid.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding Source={x:Reference MGrid}, Path=BindingContext.PieceCommand}"
-                                                  CommandParameter="{Binding}"/>
-                        </Grid.GestureRecognizers>
-                        <BoxView BackgroundColor="{Binding BoardColor}"
-                                 Opacity="0.7" />
-                        <BoxView Opacity="0.3" 
-                                 IsVisible="{Binding LastMove}"
-                                 Color="DarkCyan"/>
-                        <Frame Margin="15"
-                               CornerRadius="10"
-                               HorizontalOptions="Center"
-                               VerticalOptions="Center"
-                               BackgroundColor="Black"
-                               Opacity="0.6"
-                               IsVisible="{Binding AvailableMove}" />
-                        <Image Source="{Binding Piece, Converter={StaticResource PieceConverter}}" 
-                               Margin="5"/>
-                    </Grid>
-                </DataTemplate>
-            </BindableLayout.ItemTemplate>
+    <Grid ColumnDefinitions="30,*">
+        <Grid x:Name="MGrid"
+              Grid.Column="1"
+              HorizontalOptions="Center">
+            <Image Source="{services:ImageResource Source=wood_black.jpg}"
+                   Aspect="AspectFill" />
+            <Grid BindableLayout.ItemsSource="{Binding SquareDatas}"
+                  ColumnSpacing="0"
+                  RowSpacing="0">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="models:SquareData">
+                        <Grid Grid.Column="{Binding Column}"
+                              Grid.Row="{Binding Row}"
+                              HorizontalOptions="Center"
+                              WidthRequest="100"
+                              HeightRequest="100">
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={x:Reference MGrid}, Path=BindingContext.PieceCommand}"
+                                                      CommandParameter="{Binding}" />
+                            </Grid.GestureRecognizers>
+                            <BoxView BackgroundColor="{Binding BoardColor}"
+                                     Opacity="0.7" />
+                            <BoxView Opacity="0.3"
+                                     IsVisible="{Binding LastMove}"
+                                     Color="DarkCyan" />
+                            <Frame Margin="15"
+                                   CornerRadius="10"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"
+                                   BackgroundColor="Black"
+                                   Opacity="0.6"
+                                   IsVisible="{Binding AvailableMove}" />
+                            <Image Source="{Binding Piece, Converter={StaticResource PieceConverter}}"
+                                   Margin="5" />
+                        </Grid>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </Grid>
         </Grid>
+        <tm:CustomProgrssBar Progress="{Binding Position}" />
     </Grid>
 </ContentPage>

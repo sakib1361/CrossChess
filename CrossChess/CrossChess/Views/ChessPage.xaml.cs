@@ -26,7 +26,7 @@ namespace CrossChess.Views
         {
             base.OnAppearing();
             _vm.OnAppear();
-            MGrid.HeightRequest = MGrid.WidthRequest = Math.Min(MGrid.Height, MGrid.Width);
+
         }
     }
 }
