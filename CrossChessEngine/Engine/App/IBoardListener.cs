@@ -7,5 +7,7 @@ namespace CrossChessEngine.Engine.App
     public interface IBoardListener
     {
         void BoardPositionChanged();
+        void StartedThinking();
+        void MoveReady();
     }
 }

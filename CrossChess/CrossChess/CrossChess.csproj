@@ -12,13 +12,16 @@
 
   <ItemGroup>
     <None Remove="Resources\Fonts\FontAwesome.otf" />
+    <None Remove="Resources\Images\wood_black.jpg" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Resources\Fonts\FontAwesome.otf" />
+    <EmbeddedResource Include="Resources\Images\wood_black.jpg" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="PropertyChanged.Fody" Version="3.3.1" />
     <PackageReference Include="Xamarin.Forms" Version="4.8.0.1560" />
     <PackageReference Include="Xamarin.Essentials" Version="1.5.3.2" />
   </ItemGroup>

@@ -17,7 +17,7 @@ namespace CrossChess.Converters
             if (value is Piece piece)
             {
                var col =  piece.Player.Colour;
-                Color pieceCol = col == Player.PlayerColourNames.Black ? Color.Black : Color.White;
+                Color pieceCol = col == Player.PlayerColourNames.Black ? Color.Black : Color.LightGray;
                 FontAwesomeIconType icon = FontAwesomeIconType.Chess ;
                 switch (piece.Name)
                 {
@@ -41,7 +41,7 @@ namespace CrossChess.Converters
                         break;
                 }
 
-                return FontIconFont.GetSource(icon, pieceCol);
+                return FontIconFont.GetSource(icon, pieceCol, 56);
             }
             else return null;
         }

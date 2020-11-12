@@ -50,11 +50,6 @@ namespace CrossChessEngine.Model.Data
             Board.EstablishHashKey();
             OpeningBookSimple.Initialise();
 
-            PlayerWhite.Brain.ReadyToMakeMoveEvent += PlayerReadyToMakeMove;
-            PlayerBlack.Brain.ReadyToMakeMoveEvent += PlayerReadyToMakeMove;
-
-            
-
             // OpeningBook.BookConvert(Game.PlayerWhite);
         }
 
@@ -255,6 +250,11 @@ namespace CrossChessEngine.Model.Data
         /// </summary>
         public static string FenStartPosition { private get; set; }
 
+        internal static void ThinkingBeginningEvent()
+        {
+            _listener.StartedThinking();
+        }
+
         /// <summary>
         ///   Gets or sets FiftyMoveDrawBase. Appears to be a value set when using a FEN string. Doesn't seem quite right! TODO Invesigate FiftyMoveDrawBase.
         /// </summary>
@@ -309,6 +309,11 @@ namespace CrossChessEngine.Model.Data
             {
                 return 7;
             }
+        }
+
+        internal static void MoveConsideredEvent()
+        {
+           
         }
 
         /// <summary>
@@ -526,6 +531,11 @@ namespace CrossChessEngine.Model.Data
             SaveBackup();
             SendBoardPositionChangeEvent();
             ResumePondering();
+        }
+
+        internal static void ReadyToMakeMoveEvent()
+        {
+            PlayerReadyToMakeMove();
         }
 
         /// <summary>

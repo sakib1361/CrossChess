@@ -57,17 +57,16 @@ namespace CrossChessEngine.Engine.AI
         /// <summary>
         ///   The move considered.
         /// </summary>
-        public event BrainEvent MoveConsideredEvent;
+        //public event BrainEvent MoveConsideredEvent;
 
         /// <summary>
         ///   The ready to make move.
         /// </summary>
-        public event BrainEvent ReadyToMakeMoveEvent;
+        //public event BrainEvent ReadyToMakeMoveEvent;
 
         /// <summary>
         ///   The thinking beginning.
         /// </summary>
-        public event BrainEvent ThinkingBeginningEvent;
 
         #endregion
 
@@ -279,7 +278,7 @@ namespace CrossChessEngine.Engine.AI
             this.threadThought = new Thread(this.Think);
             this.threadThought.Name = (++Game.ThreadCounter).ToString();
 
-            this.ThinkingBeginningEvent();
+            Game.ThinkingBeginningEvent();
             this.threadThought.Priority = ThreadPriority.Normal;
 
             this.threadThought.Start();
@@ -327,7 +326,7 @@ namespace CrossChessEngine.Engine.AI
                         if ((moveBook = OpeningBookSimple.SuggestRandomMove(player)) != null)
                         {
                             this.PrincipalVariation.Add(moveBook);
-                            this.MoveConsideredEvent();
+                            Game.MoveConsideredEvent();
                             throw new ForceImmediateMoveException();
                         }
                     }
@@ -452,16 +451,16 @@ namespace CrossChessEngine.Engine.AI
                 }
             }
 
-            this.MoveConsideredEvent?.Invoke();
+            Game.MoveConsideredEvent();
 
             System.Diagnostics.Debug.WriteLine(
                 string.Format(
                     "Thread {0} is ending " + (this.IsPondering ? "pondering" : "thinking"), Thread.CurrentThread.Name));
 
             this.threadThought = null;
-            if (this.MoveConsideredEvent != null && !this.IsPondering)
+            if (!this.IsPondering)
             {
-                this.ReadyToMakeMoveEvent();
+                Game.ReadyToMakeMoveEvent();
             }
 
             this.IsPondering = false;
@@ -479,7 +478,7 @@ namespace CrossChessEngine.Engine.AI
         /// </summary>
         private void SearchMoveConsideredHandler()
         {
-            this.MoveConsideredEvent?.Invoke();
+            Game.MoveConsideredEvent();
         }
 
         #endregion
