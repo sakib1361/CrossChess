@@ -10,6 +10,5 @@
         <BoxView x:Name="BottomView"
                  VerticalOptions="End"
                  Color="White" />
-        <BoxView x:Name="TopView"/>
     </Grid>
 </ContentView>

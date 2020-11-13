@@ -45,6 +45,11 @@ namespace CrossChess.ViewModels
 
         public void BoardPositionChanged()
         {
+            DispatcherHelper.Run(UpdateBoard);
+        }
+
+        private void UpdateBoard()
+        {
             if (SquareDatas.Count == 0)
             {
                 Position = 0.5;
@@ -67,11 +72,14 @@ namespace CrossChess.ViewModels
 
                 var curPos = Math.Max(0, CurrentPlayer.PositionPoints);
                 var oppPos = Math.Max(0, Opponent.PositionPoints);
+
                 Position = curPos / ((curPos + oppPos) * 1.0);
-                if(CurrentPiecePoint != CurrentPlayer.CapturedEnemyPiecesTotalBasicValue)
+
+
+                if (CurrentPiecePoint != CurrentPlayer.CapturedEnemyPiecesTotalBasicValue)
                 {
                     CurrentPiecePoint = CurrentPlayer.CapturedEnemyPiecesTotalBasicValue;
-                    foreach(Piece item in CurrentPlayer.CapturedEnemyPieces)
+                    foreach (Piece item in CurrentPlayer.CapturedEnemyPieces)
                     {
                         if (PlayerPieces.Contains(item) == false)
                             PlayerPieces.Add(item);
@@ -88,7 +96,6 @@ namespace CrossChess.ViewModels
                 }
             }
         }
-
         private void CreateBoard()
         {
             for (int intOrdinal = 0; intOrdinal < Board.SquareCount; intOrdinal++)
@@ -134,7 +141,8 @@ namespace CrossChess.ViewModels
 
                     Game.MakeAMove(obj.PieceMove.Name, currentSquare.Piece, obj.Square);
                 }
-                allMoves.Clear();
+                allMoves?.Clear();
+          
                 foreach (var square in SquareDatas)
                 {
                     square.AvailableMove = false;

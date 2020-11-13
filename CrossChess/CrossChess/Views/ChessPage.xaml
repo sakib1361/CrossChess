@@ -1,23 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:services="clr-namespace:CrossChess.Services"
-             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d"
-             xmlns:tm="clr-namespace:CrossChess.Templates"
-             xmlns:vm="clr-namespace:CrossChess.ViewModels"
-             d:BindingContext="{x:Static vm:ChessViewModel}"
-             x:DataType="vm:ChessViewModel"
-             xmlns:cv="clr-namespace:CrossChess.Converters"
-             xmlns:models="clr-namespace:CrossChess.Model"
-             x:Class="CrossChess.Views.ChessPage">
+            xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+            xmlns:services="clr-namespace:CrossChess.Services"
+            xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+            mc:Ignorable="d"
+            BackgroundColor="Gray"
+            xmlns:tm="clr-namespace:CrossChess.Templates"
+            xmlns:vm="clr-namespace:CrossChess.ViewModels"
+            d:BindingContext="{x:Static vm:ChessViewModel}"
+            x:DataType="vm:ChessViewModel"
+            xmlns:cv="clr-namespace:CrossChess.Converters"
+            xmlns:models="clr-namespace:CrossChess.Model"
+            x:Class="CrossChess.Views.ChessPage">
     <ContentPage.Resources>
         <cv:PieceConverter x:Key="PieceConverter" />
     </ContentPage.Resources>
-    <Grid ColumnDefinitions="30,Auto,*">
-        <Grid x:Name="MGrid"
-              Grid.Column="1"
+    <Grid x:Name="MGrid"
+          RowDefinitions="40,*,50,40">
+        <Grid x:Name="ChessGrid"
               HorizontalOptions="Center">
             <Image Source="{services:ImageResource Source=wood_black.jpg}"
                    Aspect="AspectFill" />
@@ -37,13 +38,9 @@
                             <BoxView Opacity="0.3"
                                      IsVisible="{Binding LastMove}"
                                      Color="DarkCyan" />
-                            <Frame Margin="15"
-                                   CornerRadius="10"
-                                   HorizontalOptions="Center"
-                                   VerticalOptions="Center"
-                                   BackgroundColor="Black"
-                                   Opacity="0.6"
-                                   IsVisible="{Binding AvailableMove}" />
+                            <BoxView Opacity="0.5"
+                                     IsVisible="{Binding AvailableMove}"
+                                     Color="Black" />
                             <Image Source="{Binding Piece, Converter={StaticResource PieceConverter}}"
                                    Margin="5" />
                         </Grid>
@@ -51,6 +48,64 @@
                 </BindableLayout.ItemTemplate>
             </Grid>
         </Grid>
-        <tm:CustomProgrssBar Progress="{Binding Position}" />
+        <tm:CustomProgrssBar Progress="{Binding Position}"
+                             x:Name="MRogress" />
+        <Grid x:Name="OpponentBar"
+              RowSpacing="0"
+              ColumnDefinitions="40,*"
+              RowDefinitions="Auto,*">
+            <Frame Padding="5"
+                   Grid.RowSpan="2"
+                   BorderColor="Gray"
+                   WidthRequest="40"
+                   HeightRequest="40"
+                   BackgroundColor="WhiteSmoke">
+                <Image Source="{Binding Opponent.King, Converter={StaticResource PieceConverter}}" />
+            </Frame>
+            <Label Text="{Binding Opponent.Colour}"
+                   Grid.Column="1" />
+            <FlexLayout Grid.Column="1"
+                        Grid.Row="1"
+                        Direction="Row"
+                         BindableLayout.ItemsSource="{Binding OpponentPieces}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="models:SquareData">
+                        <Image Source="{Binding Converter={StaticResource PieceConverter}}"
+                               HeightRequest="15"
+                               WidthRequest="15" />
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </FlexLayout>
+        </Grid>
+        <Grid x:Name="PlayerBar"
+              RowSpacing="0"
+              ColumnDefinitions="40,*"
+              RowDefinitions="Auto,*">
+            <Frame Padding="5"
+                   WidthRequest="40"
+                   HeightRequest="40"
+                   Grid.RowSpan="2"
+                   BorderColor="Gray"
+                   BackgroundColor="WhiteSmoke">
+                <Image Source="{Binding CurrentPlayer.King, Converter={StaticResource PieceConverter}}" />
+            </Frame>
+            <Label Text="{Binding CurrentPlayer.Colour}"
+                   Grid.Column="1" />
+            <FlexLayout Grid.Column="1"
+                         Grid.Row="1"
+                        Direction="Row"
+                        BindableLayout.ItemsSource="{Binding PlayerPieces}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="models:SquareData">
+                        <Image Source="{Binding Converter={StaticResource PieceConverter}}" 
+                               HeightRequest="15"
+                               WidthRequest="15"/>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </FlexLayout>
+        </Grid>
+        <Grid x:Name="MenuBar">
+            <Label Text="Menu" />
+        </Grid>
     </Grid>
-</ContentPage>
+</ContentPage >

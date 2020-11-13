@@ -23,12 +23,7 @@ namespace CrossChess.Templates
             set => BottomView.Color = value;
         }
 
-        public Color BackColor
-        {
-            get => TopView.Color;
-            set => TopView.Color = value;
-        }
-
+        public bool Horizontal { get; set; } = false;
         public double Progress
         {
             get => (double)GetValue(ProgressProperty);
@@ -51,11 +46,20 @@ namespace CrossChess.Templates
             }
         }
 
-        private async void Reset(double data)
+        internal async void Reset(double data)
         {
             if (data == 0) return;
             if (this.Height <= 0) await Task.Delay(250);
-            BottomView.HeightRequest = this.Height * data;
+            if (Horizontal)
+            {
+                BottomView.WidthRequest = this.Width * data;
+                BottomView.HeightRequest = this.Height;
+            }
+            else
+            {
+                BottomView.HeightRequest = this.Height * data;
+                BottomView.WidthRequest = this.Width;
+            }
         }
     }
 }
