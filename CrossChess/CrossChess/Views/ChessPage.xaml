@@ -1,18 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-            xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-            xmlns:services="clr-namespace:CrossChess.Services"
-            xmlns:d="http://xamarin.com/schemas/2014/forms/design"
-            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-            mc:Ignorable="d"
-            BackgroundColor="Gray"
-            xmlns:tm="clr-namespace:CrossChess.Templates"
-            xmlns:vm="clr-namespace:CrossChess.ViewModels"
-            d:BindingContext="{x:Static vm:ChessViewModel}"
-            x:DataType="vm:ChessViewModel"
-            xmlns:cv="clr-namespace:CrossChess.Converters"
-            xmlns:models="clr-namespace:CrossChess.Model"
-            x:Class="CrossChess.Views.ChessPage">
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:services="clr-namespace:CrossChess.Services"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             xmlns:piece="clr-namespace:CrossChessEngine.Model.PieceModel;assembly=CrossChessEngine"
+             xmlns:moves="clr-namespace:CrossChessEngine.Model.Data;assembly=CrossChessEngine"
+             Background="#312e2b"
+             xmlns:tm="clr-namespace:CrossChess.Templates"
+             xmlns:vm="clr-namespace:CrossChess.ViewModels"
+             d:BindingContext="{x:Static vm:ChessViewModel}"
+             x:DataType="vm:ChessViewModel"
+             xmlns:cv="clr-namespace:CrossChess.Converters"
+             xmlns:models="clr-namespace:CrossChess.Model"
+             x:Class="CrossChess.Views.ChessPage">
     <ContentPage.Resources>
         <cv:PieceConverter x:Key="PieceConverter" />
     </ContentPage.Resources>
@@ -67,9 +69,9 @@
             <FlexLayout Grid.Column="1"
                         Grid.Row="1"
                         Direction="Row"
-                         BindableLayout.ItemsSource="{Binding OpponentPieces}">
+                        BindableLayout.ItemsSource="{Binding OpponentPieces}">
                 <BindableLayout.ItemTemplate>
-                    <DataTemplate x:DataType="models:SquareData">
+                    <DataTemplate x:DataType="piece:Piece">
                         <Image Source="{Binding Converter={StaticResource PieceConverter}}"
                                HeightRequest="15"
                                WidthRequest="15" />
@@ -92,20 +94,46 @@
             <Label Text="{Binding CurrentPlayer.Colour}"
                    Grid.Column="1" />
             <FlexLayout Grid.Column="1"
-                         Grid.Row="1"
+                        Grid.Row="1"
                         Direction="Row"
                         BindableLayout.ItemsSource="{Binding PlayerPieces}">
                 <BindableLayout.ItemTemplate>
-                    <DataTemplate x:DataType="models:SquareData">
-                        <Image Source="{Binding Converter={StaticResource PieceConverter}}" 
+                    <DataTemplate x:DataType="piece:Piece">
+                        <Image Source="{Binding Converter={StaticResource PieceConverter}}"
                                HeightRequest="15"
-                               WidthRequest="15"/>
+                               WidthRequest="15" />
                     </DataTemplate>
                 </BindableLayout.ItemTemplate>
             </FlexLayout>
         </Grid>
         <Grid x:Name="MenuBar">
-            <Label Text="Menu" />
+            <Button Text="New"
+                    Grid.Column="0" />
+            <Button Text="Hint"
+                    Grid.Column="1"/>
+            <Button Command="{Binding UndoCommand}"
+                    Text="Undo"
+                    Grid.Column="2" />
+            <Button Text="Redo"
+                    Grid.Column="3" />
+            <Button Text="MoveButton"
+                    Grid.Column="3" />
         </Grid>
+        <Grid x:Name="MoveGrid">
+            <CollectionView  ItemsSource="{Binding Moves}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="moves:Move">
+                        <StackLayout Orientation="Horizontal"
+                                     Spacing="0">
+                            <Label Text="{Binding MoveNo}" />
+                            <Label Text=". " />
+                            <Label Text="{Binding Description}" />
+                        </StackLayout>
+                       
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Grid>
+       
     </Grid>
-</ContentPage >
+</ContentPage>

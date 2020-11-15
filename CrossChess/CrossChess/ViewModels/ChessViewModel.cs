@@ -7,6 +7,7 @@ using PropertyChanged;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Text;
 using System.Windows.Input;
 
@@ -18,20 +19,20 @@ namespace CrossChess.ViewModels
         private SquareData currentSquare;
         private Moves allMoves;
 
+        private List<Piece> Pieces;
         public double Position { get; set; }
         public bool IsWhite { get; private set; }
         public ObservableCollection<SquareData> SquareDatas { get; }
-        public ObservableCollection<Piece> OpponentPieces { get; }
-        public ObservableCollection<Piece> PlayerPieces { get; }
+        public IEnumerable<Piece> OpponentPieces { get; private set; }
+        public IEnumerable<Piece> PlayerPieces { get; private set; }
         public ObservableCollection<Move> Moves { get; }
         public int OpponentPiecePoint { get; private set; }
         public int CurrentPiecePoint { get; private set; }
         public ChessViewModel()
         {
             SquareDatas = new ObservableCollection<SquareData>();
-            OpponentPieces = new ObservableCollection<Piece>();
-            PlayerPieces = new ObservableCollection<Piece>();
             Moves = new ObservableCollection<Move>();
+            Pieces = new List<Piece>();
         }
 
         internal void OnAppear()
@@ -45,17 +46,12 @@ namespace CrossChess.ViewModels
 
         public void BoardPositionChanged()
         {
-            DispatcherHelper.Run(UpdateBoard);
-        }
-
-        private void UpdateBoard()
-        {
             if (SquareDatas.Count == 0)
             {
                 Position = 0.5;
                 CreateBoard();
-                OpponentPieces.Clear();
-                PlayerPieces.Clear();
+                PlayerPieces = null;
+                OpponentPieces = null;
             }
             else
             {
@@ -63,7 +59,7 @@ namespace CrossChess.ViewModels
                 if (!Game.EditModeActive && Game.MoveHistory.Count > 0)
                 {
                     LastMove = Game.MoveHistory[Game.MoveHistory.Count - 1];
-                    Moves.Add(LastMove);
+                    Moves.Insert(0,LastMove);
                 }
                 foreach (var square in SquareDatas)
                 {
@@ -73,29 +69,18 @@ namespace CrossChess.ViewModels
                 var curPos = Math.Max(0, CurrentPlayer.PositionPoints);
                 var oppPos = Math.Max(0, Opponent.PositionPoints);
 
-                Position = curPos / ((curPos + oppPos) * 1.0);
-
-
-                if (CurrentPiecePoint != CurrentPlayer.CapturedEnemyPiecesTotalBasicValue)
+                //Position = curPos / ((curPos + oppPos) * 1.0);
+                PlayerPieces = Pieces.Where(x => x.Player == CurrentPlayer &&
+                                                 x.IsInPlay == false);
+                OpponentPieces = Pieces.Where(x => x.Player == Opponent &&
+                                                 x.IsInPlay == false);
+                if (Game.PlayerToPlay.IsInCheckMate)
                 {
-                    CurrentPiecePoint = CurrentPlayer.CapturedEnemyPiecesTotalBasicValue;
-                    foreach (Piece item in CurrentPlayer.CapturedEnemyPieces)
-                    {
-                        if (PlayerPieces.Contains(item) == false)
-                            PlayerPieces.Add(item);
-                    }
-                }
-                if (OpponentPiecePoint != Opponent.CapturedEnemyPiecesTotalBasicValue)
-                {
-                    OpponentPiecePoint = Opponent.CapturedEnemyPiecesTotalBasicValue;
-                    foreach (Piece item in Opponent.CapturedEnemyPieces)
-                    {
-                        if (OpponentPieces.Contains(item) == false)
-                            OpponentPieces.Add(item);
-                    }
+
                 }
             }
         }
+
         private void CreateBoard()
         {
             for (int intOrdinal = 0; intOrdinal < Board.SquareCount; intOrdinal++)
@@ -105,6 +90,11 @@ namespace CrossChess.ViewModels
                 if (square != null)
                 {
                     SquareDatas.Add(new SquareData(square));
+
+                    if (square.Piece != null)
+                    {
+                        Pieces.Add(square.Piece);
+                    }
                 }
             }
         }
@@ -128,8 +118,8 @@ namespace CrossChess.ViewModels
                 Game.SuspendPondering();
                 allMoves = new Moves();
                 obj.Piece.GenerateLegalMoves(allMoves);
-                Game.ResumePondering();
                 GenerateMoves(allMoves);
+                Game.ResumePondering();
             }
             else
             {
