@@ -18,11 +18,22 @@ namespace CrossChess.Services
             {
                 return null;
             }
-            var assembly = typeof(ImageResourceExtension).GetTypeInfo().Assembly;
-            var path = "CrossChess.Resources.Images." + Source;
-            // Do your translation lookup here, using whatever method you require
-            var imageSource = ImageSource.FromResource(path, assembly);
 
+
+            // Do your translation lookup here, using whatever method you require
+
+
+            return ImageHelper.GetImage(Source);
+        }
+    }
+
+    internal static class ImageHelper
+    {
+        static readonly Assembly assembly = typeof(ImageResourceExtension).GetTypeInfo().Assembly;
+        internal static ImageSource GetImage(string source)
+        {
+            var path = "CrossChess.Resources.Images." + source;
+            var imageSource = ImageSource.FromResource(path, assembly);
             return imageSource;
         }
     }

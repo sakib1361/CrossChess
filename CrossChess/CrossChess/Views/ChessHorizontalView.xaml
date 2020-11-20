@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:tm="clr-namespace:CrossChess.Templates"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             xmlns:vm="clr-namespace:CrossChess.ViewModels"
+             d:BindingContext="{x:Static vm:ChessViewModel}"
+             x:DataType="vm:ChessViewModel"
+             xmlns:cv="clr-namespace:CrossChess.Converters"
+             x:Class="CrossChess.Views.ChessHorizontalView">
+    <Grid ColumnDefinitions="30,Auto,*"
+          x:Name="MGrid">
+        <tm:CustomProgrssBar Horizontal="False" 
+                             Progress="{Binding Position}"/>
+        <tm:ChessBoard Grid.Column="1" 
+                       HeightRequest="{Binding Source={x:Reference MGrid}, Path=Height}"
+                       WidthRequest="{Binding Source={x:Reference MGrid}, Path=Height}"/>
+        <Grid RowDefinitions="40,*,40,40"
+              Grid.Column="2">
+            <tm:PlayerBar BindingContext="{Binding OpponentPlayer}" />
+            <Grid Grid.Row="3">
+                <Button Text="New"
+                        Grid.Column="0" />
+                <Button Text="Hint"
+                        Grid.Column="1" />
+                <Button Command="{Binding UndoCommand}"
+                        Text="Undo"
+                        Grid.Column="2" />
+                <Button Text="Redo"
+                        Grid.Column="3" />
+                <Button Text="MoveButton"
+                        Grid.Column="3" />
+            </Grid>
+            <tm:PlayerBar BindingContext="{Binding CurrentPlayer}"
+                          Grid.Row="2" />
+        </Grid>
+    </Grid>
+</ContentView>

@@ -11,7 +11,7 @@ namespace CrossChess.Model
     [AddINotifyPropertyChangedInterface]
     public class SquareData
     {
-        static Color dark = Color.FromArgb(122, 77, 78);
+        static Color dark = Color.FromArgb(40, 46, 60);
         static Color light = Color.FromArgb(199, 157, 96);
         public SquareData(Square square)
         {
@@ -20,7 +20,7 @@ namespace CrossChess.Model
             Row =7- square.Rank;
             ID = square.Ordinal;
             Piece = square.Piece;
-            BoardColor = square.Colour == Square.ColourNames.Black ? dark : light;
+            BoardColor = square.Colour == Square.ColourNames.Black ? dark : Color.White;
         }
 
         public Square Square { get; }

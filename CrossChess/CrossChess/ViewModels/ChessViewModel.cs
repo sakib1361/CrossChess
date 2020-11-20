@@ -23,11 +23,9 @@ namespace CrossChess.ViewModels
         public double Position { get; set; }
         public bool IsWhite { get; private set; }
         public ObservableCollection<SquareData> SquareDatas { get; }
-        public IEnumerable<Piece> OpponentPieces { get; private set; }
-        public IEnumerable<Piece> PlayerPieces { get; private set; }
         public ObservableCollection<Move> Moves { get; }
-        public int OpponentPiecePoint { get; private set; }
-        public int CurrentPiecePoint { get; private set; }
+        public ChessPlayer CurrentPlayer { get; private set; }
+        public ChessPlayer OpponentPlayer { get; private set; }
         public ChessViewModel()
         {
             SquareDatas = new ObservableCollection<SquareData>();
@@ -37,11 +35,13 @@ namespace CrossChess.ViewModels
 
         internal void OnAppear()
         {
-            Game.DifficultyLevel = 3;
-            Game.PlayerBlack.Intellegence = Player.PlayerIntellegenceNames.Computer;
-            Opponent = Game.PlayerBlack;
-            CurrentPlayer = Game.PlayerWhite;
+            Game.DifficultyLevel = 16;
+            Game.MaximumSearchDepth = 0;
+            Game.PlayerBlack.Intellegence = Player.PlayerIntellegenceNames.Human;
+            Game.PlayerWhite.Intellegence = Player.PlayerIntellegenceNames.Computer;
             Game.New(this);
+            CurrentPlayer = new ChessPlayer(Game.PlayerBlack, Pieces);
+            OpponentPlayer = new ChessPlayer(Game.PlayerWhite, Pieces);
         }
 
         public void BoardPositionChanged()
@@ -50,30 +50,25 @@ namespace CrossChess.ViewModels
             {
                 Position = 0.5;
                 CreateBoard();
-                PlayerPieces = null;
-                OpponentPieces = null;
             }
             else
             {
                 Move LastMove = null;
+                
                 if (!Game.EditModeActive && Game.MoveHistory.Count > 0)
                 {
                     LastMove = Game.MoveHistory[Game.MoveHistory.Count - 1];
-                    Moves.Insert(0,LastMove);
+                    Moves.Insert(0, LastMove);
                 }
                 foreach (var square in SquareDatas)
                 {
                     square.UpdatePiece(LastMove);
                 }
-
-                var curPos = Math.Max(0, CurrentPlayer.PositionPoints);
-                var oppPos = Math.Max(0, Opponent.PositionPoints);
-
-                //Position = curPos / ((curPos + oppPos) * 1.0);
-                PlayerPieces = Pieces.Where(x => x.Player == CurrentPlayer &&
-                                                 x.IsInPlay == false);
-                OpponentPieces = Pieces.Where(x => x.Player == Opponent &&
-                                                 x.IsInPlay == false);
+                CurrentPlayer.Update();
+                OpponentPlayer.Update();
+                var diff = CurrentPlayer.Points - OpponentPlayer.Points;
+                var total = CurrentPlayer.Points + OpponentPlayer.Points;
+                Position = Math.Abs(0.5 + (diff / (total / 2.0)));
                 if (Game.PlayerToPlay.IsInCheckMate)
                 {
 
@@ -97,13 +92,13 @@ namespace CrossChess.ViewModels
                     }
                 }
             }
+            
         }
 
         public ICommand PieceCommand => new RelayCommand<SquareData>(PieceAction);
         public ICommand UndoCommand => new RelayCommand(UndoAction);
 
-        public Player Opponent { get; private set; }
-        public Player CurrentPlayer { get; private set; }
+       
 
         private void UndoAction()
         {
@@ -144,9 +139,10 @@ namespace CrossChess.ViewModels
         private void GenerateMoves(Moves moves)
         {
             var all = new Dictionary<int, Move>();
-            foreach(Move move in moves)
+            foreach (Move move in moves)
             {
-                all.Add(move.To.Ordinal, move);
+                if (all.ContainsKey(move.To.Ordinal) == false)
+                    all.Add(move.To.Ordinal, move);
             }
             foreach(var square in SquareDatas)
             {

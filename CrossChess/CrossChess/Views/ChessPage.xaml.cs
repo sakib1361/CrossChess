@@ -39,91 +39,16 @@ namespace CrossChess.Views
             {
                 init = true;
                 isHorizontal = curHorizontal;
-
-                if (isHorizontal) SetHorizontalUI();
-                else SetVerticalUI();
-                //ChessGrid.HeightRequest = ChessGrid.WidthRequest = Math.Min(ChessGrid.Height, ChessGrid.Width);
+                if (isHorizontal)
+                {
+                    var ct = new ChessHorizontalView()
+                    {
+                        BindingContext = this.BindingContext
+                    };
+                    mContainer.Content = ct;
+                }
             }
             
-        }
-
-        private void SetVerticalUI()
-        {
-            MGrid.ColumnDefinitions.Clear();
-            ChessGrid.Margin = new Thickness(0);
-            MRogress.Margin = new Thickness(5);
-            MGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Star });
-            MGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Star });
-
-            Grid.SetRowSpan(MRogress, 1);
-            Grid.SetRow(MRogress, 0);
-            Grid.SetColumnSpan(MRogress, 2);
-
-            Grid.SetRowSpan(ChessGrid, 1);
-            Grid.SetRow(ChessGrid, 1);
-            Grid.SetColumn(ChessGrid, 0);
-            Grid.SetColumnSpan(ChessGrid, 2);
-            
-
-            Grid.SetRow(OpponentBar, 2);
-            Grid.SetColumn(OpponentBar, 1);
-
-            Grid.SetRow(PlayerBar, 2);
-            Grid.SetColumn(PlayerBar, 0);
-
-            Grid.SetColumnSpan(MenuBar, 2);
-            Grid.SetRow(MenuBar, 3);
-            Grid.SetColumn(MenuBar, 0);
-
-            Grid.SetRow(MoveGrid, 0);
-            Grid.SetColumn(MoveGrid, 0);
-            Grid.SetColumnSpan(MoveGrid, 2);
-            Grid.SetRowSpan(MoveGrid, 4);
-
-            MoveGrid.IsVisible = false;
-
-            MRogress.Horizontal = false;
-        }
-
-        private void SetHorizontalUI()
-        {
-            MGrid.ColumnDefinitions.Clear();
-            //MGrid.RowDefinitions.Clear();
-            
-            ChessGrid.Margin = new Thickness(20, 0);
-            MRogress.Margin = new Thickness(5,10);
-            MGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = 30 });
-            MGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1.5, GridUnitType.Star) });
-            MGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Star });
-
-            Grid.SetRowSpan(MRogress, 4);
-            Grid.SetColumnSpan(MRogress, 1);
-            Grid.SetRow(MRogress, 0);
-
-            Grid.SetRowSpan(ChessGrid, 4);
-            Grid.SetColumnSpan(ChessGrid, 1);
-            Grid.SetRow(ChessGrid, 0);
-            Grid.SetColumn(ChessGrid, 1);
-
-
-            Grid.SetRow(PlayerBar, 2);
-            Grid.SetColumn(PlayerBar, 2);
-
-            Grid.SetColumn(OpponentBar, 2);
-            Grid.SetRow(OpponentBar, 0);
-
-            Grid.SetRow(MenuBar, 3);
-            Grid.SetColumn(MenuBar, 2);
-            Grid.SetColumnSpan(MenuBar, 1);
-
-            Grid.SetRow(MoveGrid, 1);
-            Grid.SetColumn(MoveGrid, 2);
-            Grid.SetColumnSpan(MoveGrid, 1);
-            Grid.SetRowSpan(MoveGrid, 1);
-
-            MoveGrid.IsVisible = true;
-            MRogress.Horizontal = true;
-           
         }
     }
 }

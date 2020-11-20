@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:CrossChess.Model"
+             xmlns:piece="clr-namespace:CrossChessEngine.Model.PieceModel;assembly=CrossChessEngine"
+             x:DataType="models:ChessPlayer"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             d:BindingContext="{x:Static models:ChessPlayer}"
+             x:Class="CrossChess.Templates.PlayerBar">
+    <Grid x:Name="OpponentBar"
+          RowSpacing="0"
+          ColumnDefinitions="40,*"
+          RowDefinitions="Auto,*">
+        <Frame Padding="5"
+               Grid.RowSpan="2"
+               BorderColor="Gray"
+               WidthRequest="40"
+               HeightRequest="40"
+               BackgroundColor="WhiteSmoke">
+            <Image Source="{Binding KingPiece, Converter={StaticResource PieceConverter}}" />
+        </Frame>
+        <StackLayout Orientation="Horizontal"
+                     Grid.Column="1">
+            <Label Text="{Binding Name}"
+                   VerticalOptions="Center"  />
+            <Label Text="{Binding Points, StringFormat='({0})'}" 
+                   FontSize="Micro"
+                   VerticalOptions="Center"/>
+        </StackLayout>
+       
+        <FlexLayout Grid.Column="1"
+                    Grid.Row="1"
+                    Direction="Row"
+                    BindableLayout.ItemsSource="{Binding CapturedPiece}">
+            <BindableLayout.ItemTemplate>
+                <DataTemplate x:DataType="piece:Piece">
+                    <Image Source="{Binding Converter={StaticResource PieceConverter}}"
+                           HeightRequest="15"
+                           WidthRequest="15" />
+                </DataTemplate>
+            </BindableLayout.ItemTemplate>
+        </FlexLayout>
+    </Grid>
+</ContentView>

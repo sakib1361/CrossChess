@@ -5,139 +5,23 @@
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
-             xmlns:piece="clr-namespace:CrossChessEngine.Model.PieceModel;assembly=CrossChessEngine"
-             xmlns:moves="clr-namespace:CrossChessEngine.Model.Data;assembly=CrossChessEngine"
-             Background="#312e2b"
-             xmlns:tm="clr-namespace:CrossChess.Templates"
              xmlns:vm="clr-namespace:CrossChess.ViewModels"
              d:BindingContext="{x:Static vm:ChessViewModel}"
              x:DataType="vm:ChessViewModel"
              xmlns:cv="clr-namespace:CrossChess.Converters"
-             xmlns:models="clr-namespace:CrossChess.Model"
              x:Class="CrossChess.Views.ChessPage">
     <ContentPage.Resources>
         <Style TargetType="Label">
             <Setter Property="TextColor"
                     Value="White" />
         </Style>
-        <cv:PieceConverter x:Key="PieceConverter" />
-    </ContentPage.Resources>
-    <Grid x:Name="MGrid"
-          RowDefinitions="40,*,50,40">
-        <Grid x:Name="ChessGrid"
-              HorizontalOptions="Center">
-            <Image Source="{services:ImageResource Source=wood_black.jpg}"
-                   Aspect="AspectFill" />
-            <Grid BindableLayout.ItemsSource="{Binding SquareDatas}"
-                  ColumnSpacing="0"
-                  RowSpacing="0">
-                <BindableLayout.ItemTemplate>
-                    <DataTemplate x:DataType="models:SquareData">
-                        <Grid Grid.Column="{Binding Column}"
-                              Grid.Row="{Binding Row}">
-                            <Grid.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding Source={x:Reference MGrid}, Path=BindingContext.PieceCommand}"
-                                                      CommandParameter="{Binding}" />
-                            </Grid.GestureRecognizers>
-                            <BoxView BackgroundColor="{Binding BoardColor}"
-                                     Opacity="0.7" />
-                            <BoxView Opacity="0.3"
-                                     IsVisible="{Binding LastMove}"
-                                     Color="DarkCyan" />
-                            <BoxView Opacity="0.5"
-                                     IsVisible="{Binding AvailableMove}"
-                                     Color="Black" />
-                            <Image Source="{Binding Piece, Converter={StaticResource PieceConverter}}"
-                                   Margin="5" />
-                        </Grid>
-                    </DataTemplate>
-                </BindableLayout.ItemTemplate>
-            </Grid>
-        </Grid>
-        <tm:CustomProgrssBar Progress="{Binding Position}"
-                             x:Name="MRogress" />
-        <Grid x:Name="OpponentBar"
-              RowSpacing="0"
-              ColumnDefinitions="40,*"
-              RowDefinitions="Auto,*">
-            <Frame Padding="5"
-                   Grid.RowSpan="2"
-                   BorderColor="Gray"
-                   WidthRequest="40"
-                   HeightRequest="40"
-                   BackgroundColor="WhiteSmoke">
-                <Image Source="{Binding Opponent.King, Converter={StaticResource PieceConverter}}" />
-            </Frame>
-            <Label Text="{Binding Opponent.Colour}"
-                   Grid.Column="1" />
-            <FlexLayout Grid.Column="1"
-                        Grid.Row="1"
-                        Direction="Row"
-                        BindableLayout.ItemsSource="{Binding OpponentPieces}">
-                <BindableLayout.ItemTemplate>
-                    <DataTemplate x:DataType="piece:Piece">
-                        <Image Source="{Binding Converter={StaticResource PieceConverter}}"
-                               HeightRequest="15"
-                               WidthRequest="15" />
-                    </DataTemplate>
-                </BindableLayout.ItemTemplate>
-            </FlexLayout>
-        </Grid>
-        <Grid x:Name="PlayerBar"
-              RowSpacing="0"
-              ColumnDefinitions="40,*"
-              RowDefinitions="Auto,*">
-            <Frame Padding="5"
-                   WidthRequest="40"
-                   HeightRequest="30"
-                   Grid.RowSpan="2"
-                   BorderColor="Gray"
-                   BackgroundColor="WhiteSmoke">
-                <Image Source="{Binding CurrentPlayer.King, Converter={StaticResource PieceConverter}}" />
-            </Frame>
-            <Label Text="{Binding CurrentPlayer.Colour}"
-                   Grid.Column="1" />
-            <FlexLayout Grid.Column="1"
-                        Grid.Row="1"
-                        Direction="Row"
-                        BindableLayout.ItemsSource="{Binding PlayerPieces}">
-                <BindableLayout.ItemTemplate>
-                    <DataTemplate x:DataType="piece:Piece">
-                        <Image Source="{Binding Converter={StaticResource PieceConverter}}"
-                               HeightRequest="15"
-                               WidthRequest="15" />
-                    </DataTemplate>
-                </BindableLayout.ItemTemplate>
-            </FlexLayout>
-        </Grid>
-        <Grid x:Name="MenuBar">
-            <Button Text="New"
-                    Grid.Column="0" />
-            <Button Text="Hint"
-                    Grid.Column="1"/>
-            <Button Command="{Binding UndoCommand}"
-                    Text="Undo"
-                    Grid.Column="2" />
-            <Button Text="Redo"
-                    Grid.Column="3" />
-            <Button Text="MoveButton"
-                    Grid.Column="3" />
-        </Grid>
-        <Grid x:Name="MoveGrid">
-            <CollectionView  ItemsSource="{Binding Moves}">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="moves:Move">
-                        <StackLayout Orientation="Horizontal"
-                                     Spacing="0">
-                            <Label Text="{Binding MoveNo}" />
-                            <Label Text=". " />
-                            <Label Text="{Binding Description}" />
-                        </StackLayout>
-                       
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-        </Grid>
        
+    </ContentPage.Resources>
+    <Grid>
+        <Image Source="{services:ImageResource Source=chess_bg.png}"
+               Aspect="AspectFill" />
+        <BoxView Color="Black"
+                 Opacity="0.5" />
+        <ContentPresenter x:Name="mContainer" />
     </Grid>
 </ContentPage>
